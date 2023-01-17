@@ -5,10 +5,15 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"log"
+	"net/url"
 	"scrapingNickparts/internal/structures"
+	"strings"
 )
 
-func Filling(b []byte) (out structures.JsonExport) {
+func Filling(b []byte, task structures.Task) (out structures.JsonExport) {
+
+	out.RequestItemData.OldBrand = task.Old.OldBrand
+	out.RequestItemData.OldNum = task.Old.OldNum
 
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(b))
 	if err != nil {
@@ -16,13 +21,14 @@ func Filling(b []byte) (out structures.JsonExport) {
 		log.Fatal(err)
 	}
 
-	//	doc1 := doc
-
 	//Собираем основной товар
 	doc.Find("div.search__block_type_request").Each(func(i int, sd1 *goquery.Selection) {
 		//Левый блок
 		sd1.Find("div.search-spare__first-row-wrap").Each(func(i int, sd1_first *goquery.Selection) {
-			out.RequestItemData.Pic, _ = sd1_first.Find(`img.search-spare__image-preview_clickable`).Attr("src")
+
+			picOsn, _ := sd1_first.Find(`img.search-spare__image-preview_clickable`).Attr("src")
+			out.RequestItemData.Pic = append(out.RequestItemData.Pic, picOsn)
+
 			out.RequestItemData.Brand = sd1_first.Find(`span.search-spare__brand`).Text()
 			out.RequestItemData.Num = sd1_first.Find(`span.search-spare__article`).Text()
 			out.RequestItemData.Text = sd1_first.Find(`p.search-spare__name`).Text()
@@ -30,6 +36,27 @@ func Filling(b []byte) (out structures.JsonExport) {
 		//правый блок
 		sd1.Find("div.search-spare__offers").Each(func(i int, sd1_offer *goquery.Selection) {
 			out.RequestItemData.Price = sd1_offer.Find(`div.search-offer__price-wrap`).First().Text()
+		})
+
+	})
+
+	//Собираем доп картинки
+
+	doc.Find("div.gallery__miniatures").Each(func(i int, sd2 *goquery.Selection) {
+
+		//Левый блок
+		sd2.Find("div.gallery__miniature").Each(func(i int, sd1_first *goquery.Selection) {
+			picOsn, _ := sd1_first.Find(`img.gallery__miniature-image`).Attr("src")
+
+			url, err := url.Parse(task.Url)
+			if err != nil {
+				task.Url = ""
+			}
+			parts := strings.Split(url.Hostname(), ".")
+			task.Url = url.Scheme + "://" + parts[len(parts)-2] + "." + parts[len(parts)-1]
+
+			out.RequestItemData.Pic = append(out.RequestItemData.Pic, (task.Url + picOsn))
+
 		})
 
 	})

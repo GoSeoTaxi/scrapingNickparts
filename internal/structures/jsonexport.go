@@ -12,11 +12,13 @@ type RequestItemparameter struct {
 }
 
 type RequestItem struct {
-	Num        string `json:"num"`
-	Brand      string `json:"brand"`
-	Text       string `json:"text"`
-	Pic        string `json:"pic"`
-	Price      string `json:"price"`
+	OldNum     string   `json:"old_num"`
+	OldBrand   string   `json:"old_brand"`
+	Num        string   `json:"num"`
+	Brand      string   `json:"brand"`
+	Text       string   `json:"text"`
+	Pic        []string `json:"pic"`
+	Price      string   `json:"price"`
 	Parameters []RequestItemparameter
 }
 

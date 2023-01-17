@@ -7,10 +7,11 @@ import (
 	"log"
 	"scrapingNickparts/internal/ChangeData"
 	"scrapingNickparts/internal/constData"
+	"scrapingNickparts/internal/structures"
 	"time"
 )
 
-func GetReq(sURL string) (body []byte) {
+func GetReq(sURL string, pathChrome string, debugLog structures.DebugLog) (body []byte) {
 	time.Sleep(constData.TimeOutRequest * time.Second)
 	sURL = ChangeData.Replacer(sURL)
 
@@ -19,7 +20,9 @@ func GetReq(sURL string) (body []byte) {
 	for rep := 0; rep < constData.ReplyGetRequest; rep++ {
 
 		if rep > 0 {
-			fmt.Printf("Ошибка сети. Запуск цил повтора. Попытка номер - %v \nURL - %v \n", rep, sURL)
+			if debugLog.Debug {
+				fmt.Printf("Ошибка сети. Запуск цил повтора. Попытка номер - %v \nURL - %v \n", rep, sURL)
+			}
 		}
 
 		var err1 error
@@ -28,7 +31,10 @@ func GetReq(sURL string) (body []byte) {
 			selectorClick := ""
 
 			opts := append(chromedp.DefaultExecAllocatorOptions[:],
+				chromedp.Flag("user-data-dir", pathChrome),
+				//	chromedp.Flag("no-sandbox", true),
 				chromedp.Flag("no-first-run", true),
+				//	chromedp.Flag("headless", !debugLog.Debug),
 				chromedp.Flag("headless", false),
 				chromedp.Flag("disable-gpu", false),
 				chromedp.Flag("enable-automation", false),
@@ -46,24 +52,26 @@ func GetReq(sURL string) (body []byte) {
 			defer cancel2()
 
 			time.AfterFunc(120*time.Second, func() {
-				fmt.Println("Завершаем зависший процесс")
+				if debugLog.Debug {
+					fmt.Println("Завершаем зависший процесс")
+				}
 				cancel2()
 			})
 
 			err := chromedp.Run(ctx,
 				chromedp.Navigate(sURL),
-				wait5S(),
+				wait5S(debugLog),
 				//	chromedp.WaitNotVisible("div.loader"),
 			)
 
 			// run task list
 			err = chromedp.Run(ctx,
-				clickAccept(),
-				wait5S(),
+				//clickAccept(),
+				wait5S(debugLog),
 			)
 
 			err = chromedp.Run(ctx,
-				clickMoreCheck(&selectorClick),
+				clickMoreCheck(&selectorClick, debugLog),
 			)
 
 			if selectorClick == constData.ClassMoreClick {
@@ -73,9 +81,9 @@ func GetReq(sURL string) (body []byte) {
 			}
 
 			err = chromedp.Run(ctx,
-				wait5S(),
-				clickParameters(),
-				wait5S(),
+				wait5S(debugLog),
+				clickParameters(debugLog),
+				wait5S(debugLog),
 				scrapIt(&res),
 			)
 			if err != nil {
@@ -83,9 +91,14 @@ func GetReq(sURL string) (body []byte) {
 				err1 = err
 			}
 
+			return
+
 		}()
 
-		fmt.Println(`*`)
+		if debugLog.Debug {
+			fmt.Println(`Создаём запрос из браузера`)
+		}
+
 		if err1 != nil {
 			continue
 		}

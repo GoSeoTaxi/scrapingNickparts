@@ -8,14 +8,13 @@ import (
 	"scrapingNickparts/internal/structures"
 )
 
-func MakerQueue(tasks []string) (err error) {
+func MakerQueue(tasks []structures.Task, pathChrome string, debugLog structures.DebugLog) (err error) {
 
 	var result []structures.JsonExport
 
 	for _, task := range tasks {
-		bodyBytes := browserWindow.GetReq(task)
-		//fmt.Println(string(bodyBytes))
-		out := Scraping.Filling(bodyBytes)
+		bodyBytes := browserWindow.GetReq(task.Url, pathChrome, debugLog)
+		out := Scraping.Filling(bodyBytes, task)
 		result = append(result, out)
 	}
 
@@ -25,7 +24,12 @@ func MakerQueue(tasks []string) (err error) {
 		return err
 	}
 
-	err = sendJson(&resMarchal)
+	if debugLog.Debug {
+		fmt.Println(`++++`)
+		fmt.Println(string(resMarchal))
+	}
+
+	err = sendJson(&resMarchal, debugLog)
 	//Тут готовый json
 
 	return err

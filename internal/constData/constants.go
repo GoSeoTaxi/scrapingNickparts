@@ -20,4 +20,5 @@ const FileRead = "in.txt"
 const ClassMoreClick = "span.w-button__content"
 
 const UrlExportRequest = "http://avtozzzapchasti.ru/rest/import/"
-const UrlImportRequest = "http://avtozzzapchasti.ru/rest/get_items/"
+
+//const UrlImportRequest = "http://avtozzzapchasti.ru/rest/get_items/"

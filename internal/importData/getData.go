@@ -5,27 +5,27 @@ import (
 	"io/ioutil"
 	"net/http"
 	"scrapingNickparts/internal/constData"
+	"scrapingNickparts/internal/structures"
 	"time"
 )
 
-func GetDataJSON(url string) (tasks []string, err error) {
+func GetDataJSON(url string, debugLog structures.DebugLog) (tasks []structures.Task, err error) {
+	fmt.Println(debugLog.NumberTrade + `_t. Делаем запрос к серверу за задачами...`)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println(err)
-		fmt.Println(`Не Создали запрос`)
+		fmt.Println(debugLog.NumberTrade + `_t. Не Создали запрос`)
 		time.Sleep(constData.ReplyGetRequestTimeOut * time.Second)
 		return nil, err
 	}
 	req.Header.Set("User-Agent", constData.UserAgert)
 	req.Header.Set("Cache-Control", "no-cache")
 
-	fmt.Println(`Делаем запрос к серверу за задачами`)
-
 	client := &http.Client{Timeout: (time.Second * constData.TimeOutRequestGeter)}
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println(`Не считали данные`)
+		fmt.Println(debugLog.NumberTrade + `_t. Не считали данные`)
 		return nil, err
 	}
 
@@ -41,10 +41,14 @@ func GetDataJSON(url string) (tasks []string, err error) {
 
 	tasks, err = taskMaker(body)
 	if err != nil {
-		fmt.Println(`Error encoding JSON. `)
+		fmt.Println(debugLog.NumberTrade + `_t. Error encoding JSON. `)
 		fmt.Println(err)
 		time.Sleep(constData.ReplyGetRequestTimeOut * time.Second)
-		return nil, err
+
+	}
+
+	if len(tasks) < 1 {
+		return nil, fmt.Errorf(`Нет задач`)
 	}
 
 	return tasks, nil

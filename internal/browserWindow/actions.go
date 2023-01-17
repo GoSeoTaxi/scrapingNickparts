@@ -6,18 +6,25 @@ import (
 	"github.com/chromedp/chromedp"
 	"log"
 	"scrapingNickparts/internal/constData"
+	"scrapingNickparts/internal/structures"
 	"time"
 )
 
-func wait5S() chromedp.Tasks {
+func wait5S(debugLog structures.DebugLog) chromedp.Tasks {
 	return chromedp.Tasks{
 		chromedp.ActionFunc(func(context.Context) error {
-			log.Printf("start waiting")
+
+			if debugLog.Debug {
+				log.Printf(debugLog.NumberTrade + "_trade start waiting")
+			}
+
 			return nil
 		}),
 		chromedp.Sleep(5 * time.Second),
 		chromedp.ActionFunc(func(context.Context) error {
-			log.Printf("end waiting")
+			if debugLog.Debug {
+				log.Printf(debugLog.NumberTrade + "_trade end waiting")
+			}
 			return nil
 		}),
 	}
@@ -34,7 +41,7 @@ func clickAccept() chromedp.Tasks {
 	}
 }
 
-func clickMoreCheck(selectorClick *string) chromedp.Tasks {
+func clickMoreCheck(selectorClick *string, debugLog structures.DebugLog) chromedp.Tasks {
 
 	nodes := []*cdp.Node{}
 
@@ -66,23 +73,34 @@ func clickMoreCheck(selectorClick *string) chromedp.Tasks {
 		}),
 		//	chromedp.Click("//*[@id=\"main_inner_wrapper\"]/div[4]/div[1]/div/div/button/span"),
 		chromedp.ActionFunc(func(context.Context) error {
-			log.Printf("Обработка показать ещё = Успех")
+
+			if debugLog.Debug {
+				log.Printf(debugLog.NumberTrade + " _trade Обработка показать ещё = Успех")
+			}
+
 			return nil
 		}),
 	}
 }
 
-func clickParameters() chromedp.Tasks {
+func clickParameters(debugLog structures.DebugLog) chromedp.Tasks {
 	return chromedp.Tasks{
 		chromedp.ActionFunc(func(context.Context) error {
-			log.Printf("Нажимаем парам")
+			if debugLog.Debug {
+				log.Printf(debugLog.NumberTrade + "_trade Нажимаем парам")
+			}
+
 			return nil
 		}),
 		chromedp.Sleep(3 * time.Second),
 		chromedp.Click("parameters__alternatives"),
 		chromedp.WaitEnabled("div.modal-content"),
 		chromedp.ActionFunc(func(context.Context) error {
-			log.Printf("Дождались парам")
+
+			if debugLog.Debug {
+				log.Printf(debugLog.NumberTrade + "_trade Дождались парам")
+			}
+
 			return nil
 		}),
 	}

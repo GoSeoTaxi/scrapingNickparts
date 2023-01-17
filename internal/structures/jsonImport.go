@@ -8,3 +8,13 @@ type JsonImport struct {
 	} `json:"result"`
 	Query []interface{} `json:"query"`
 }
+
+type JsonOld struct {
+	OldNum   string
+	OldBrand string
+}
+
+type Task struct {
+	Old JsonOld
+	Url string
+}
