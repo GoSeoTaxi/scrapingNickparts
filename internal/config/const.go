@@ -1,4 +1,5 @@
 package config
 
 const tPath = `C:\temp\00`
-const urlI = "http://avtozzzapchasti.ru/rest/get_items/"
+const urlI = "https://avtozzzapchasti.ru/rest/get_items/"
+const urlE = "https://avtozzzapchasti.ru/rest/import/"

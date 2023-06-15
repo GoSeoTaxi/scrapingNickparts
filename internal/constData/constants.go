@@ -12,13 +12,10 @@ const ReplyGetRequest = 10
 const ReplyGetRequestTimeOut = 10
 const TimeOutRequestGeter = 120
 
-// Old
-const FileRead = "in.txt"
-
 // NewNew
 
 const ClassMoreClick = "span.w-button__content"
 
-const UrlExportRequest = "http://avtozzzapchasti.ru/rest/import/"
+//const UrlExportRequest = "http://avtozzzapchasti.ru/rest/import/"
 
 //const UrlImportRequest = "http://avtozzzapchasti.ru/rest/get_items/"

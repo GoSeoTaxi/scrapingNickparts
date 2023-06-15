@@ -50,6 +50,8 @@ func cirkle(path string, numTrade int, cfg config.Config) {
 	debugLog := structures.DebugLog{
 		Debug:       cfg.Debug,
 		NumberTrade: strconv.Itoa(numTrade),
+		UrlI:        cfg.URLImport,
+		UrlE:        cfg.URLExport,
 	}
 
 	//	var debugLog structures.DebugLog{debugLog.Debug:cfg.Debug, }

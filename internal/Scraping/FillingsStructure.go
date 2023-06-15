@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func Filling(b []byte, task structures.Task) (out structures.JsonExport) {
+func Filling(b []byte, task structures.Task, debugLog structures.DebugLog) (out structures.JsonExport) {
 
 	out.RequestItemData.OldBrand = task.Old.OldBrand
 	out.RequestItemData.OldNum = task.Old.OldNum
@@ -39,6 +39,25 @@ func Filling(b []byte, task structures.Task) (out structures.JsonExport) {
 		})
 
 	})
+
+	//Если нет блока с оригиналами, то берём картинку из мейна
+	if len(out.RequestItemData.Pic) == 0 {
+
+		doc.Find("div.search-result-detail-info__gallery").Each(func(i int, sdI2 *goquery.Selection) {
+
+			url, err := url.Parse(task.Url)
+			if err != nil {
+				task.Url = ""
+			}
+			parts := strings.Split(url.Hostname(), ".")
+			task.Url = url.Scheme + "://" + parts[len(parts)-2] + "." + parts[len(parts)-1]
+
+			picOsnADD, _ := sdI2.Find(`img.gallery__main-image`).Attr("src")
+			out.RequestItemData.Pic = append(out.RequestItemData.Pic, (task.Url + picOsnADD))
+
+		})
+
+	}
 
 	//Собираем доп картинки
 
@@ -123,6 +142,12 @@ func Filling(b []byte, task structures.Task) (out structures.JsonExport) {
 		})
 
 	})
+
+	if debugLog.Debug {
+		log.Println(`++++++`)
+		log.Println(out)
+		log.Println(`++++++`)
+	}
 
 	return out
 }

@@ -14,8 +14,13 @@ func MakerQueue(tasks []structures.Task, pathChrome string, debugLog structures.
 
 	for _, task := range tasks {
 		bodyBytes := browserWindow.GetReq(task.Url, pathChrome, debugLog)
-		out := Scraping.Filling(bodyBytes, task)
+		out := Scraping.Filling(bodyBytes, task, debugLog)
 		result = append(result, out)
+	}
+
+	if debugLog.Debug {
+		fmt.Println(result)
+		fmt.Println(`+++ MAKER QUEUE`)
 	}
 
 	resMarchal, err := json.Marshal(result)

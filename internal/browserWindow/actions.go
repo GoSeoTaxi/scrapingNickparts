@@ -89,18 +89,15 @@ func clickParameters(debugLog structures.DebugLog) chromedp.Tasks {
 			if debugLog.Debug {
 				log.Printf(debugLog.NumberTrade + "_trade Нажимаем парам")
 			}
-
 			return nil
 		}),
 		chromedp.Sleep(3 * time.Second),
 		chromedp.Click("parameters__alternatives"),
-		chromedp.WaitEnabled("div.modal-content"),
+		chromedp.WaitEnabled("div.detail-parameters"),
 		chromedp.ActionFunc(func(context.Context) error {
-
 			if debugLog.Debug {
 				log.Printf(debugLog.NumberTrade + "_trade Дождались парам")
 			}
-
 			return nil
 		}),
 	}

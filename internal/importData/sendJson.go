@@ -5,17 +5,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"scrapingNickparts/internal/constData"
 	"scrapingNickparts/internal/structures"
 )
 
 func sendJson(resMarchal *[]byte, debugLog structures.DebugLog) (err error) {
 
 	if debugLog.Debug {
-		fmt.Println(debugLog.NumberTrade+"_Trade URL:>", constData.UrlExportRequest)
+		fmt.Println(debugLog.NumberTrade+"_Trade URL:>", debugLog.UrlE)
 	}
 
-	req, err := http.NewRequest("POST", constData.UrlExportRequest, bytes.NewBuffer(*resMarchal))
+	req, err := http.NewRequest("POST", debugLog.UrlE, bytes.NewBuffer(*resMarchal))
 	//	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
 	client := &http.Client{}
