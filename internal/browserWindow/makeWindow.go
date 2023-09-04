@@ -3,12 +3,13 @@ package browserWindow
 import (
 	"context"
 	"fmt"
-	"github.com/chromedp/chromedp"
 	"log"
+	"time"
+
+	"github.com/chromedp/chromedp"
 	"scrapingNickparts/internal/ChangeData"
 	"scrapingNickparts/internal/constData"
 	"scrapingNickparts/internal/structures"
-	"time"
 )
 
 func GetReq(sURL string, pathChrome string, debugLog structures.DebugLog) (body []byte) {
@@ -66,7 +67,7 @@ func GetReq(sURL string, pathChrome string, debugLog structures.DebugLog) (body 
 
 			// run task list
 			err = chromedp.Run(ctx,
-				//clickAccept(),
+				// clickAccept(),
 				wait5S(debugLog),
 			)
 
@@ -97,6 +98,8 @@ func GetReq(sURL string, pathChrome string, debugLog structures.DebugLog) (body 
 
 		if debugLog.Debug {
 			fmt.Println(`Создаём запрос из браузера`)
+			fmt.Println(sURL)
+			fmt.Println("Запрошенная страница")
 		}
 
 		if err1 != nil {

@@ -7,3 +7,7 @@ Output - json with data
 
 additinal
 
+
+
+# v 0.2.6
+Change getPrice
