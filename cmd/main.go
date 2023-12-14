@@ -1,29 +1,30 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"strconv"
+	"time"
+
 	"scrapingNickparts/internal/config"
 	"scrapingNickparts/internal/constData"
 	"scrapingNickparts/internal/importData"
 	"scrapingNickparts/internal/structures"
-	"strconv"
-	"time"
 )
 
 func main() {
 
-	fmt.Println("Starting app...")
+	log.Println("Starting app...")
 	cfg, err := config.InitConfig()
 	if err != nil {
-		fmt.Printf("No load config %v", err)
+		log.Printf("No load config %v", err)
 	}
 
 	// Количество потоков
-	// fmt.Println(cfg.StartCopy)
+	// log.Println(cfg.StartCopy)
 
 	iConf, err := strconv.Atoi(cfg.StartCopy)
 	if err != nil {
-		fmt.Printf("No load config %v", err)
+		log.Printf("No load config %v", err)
 		iConf = 1
 	}
 
@@ -35,7 +36,7 @@ func main() {
 
 	for {
 		time.Sleep(180 * time.Second)
-		fmt.Println(`Я работаю, не выключай меня`)
+		log.Println(`Я работаю, не выключай меня`)
 	}
 
 	/*
@@ -58,29 +59,35 @@ func cirkle(path string, numTrade int, cfg config.Config) {
 	//	debugLog.Debug = cfg.Debug
 	//	debugLog.NumberTrade = strconv.Itoa(numTrade)
 
-	fmt.Println(`Запускаю поток` + debugLog.NumberTrade)
+	log.Println(`Запускаю поток ` + debugLog.NumberTrade)
 
 	for {
-
 		tasks, err := importData.GetDataJSON(cfg.URLImport, debugLog)
 		if err != nil {
-			fmt.Println(`Ошибка получения задач. Поток ` + debugLog.NumberTrade)
-			fmt.Println(err)
+			log.Println(`Ошибка получения задач. Поток ` + debugLog.NumberTrade)
+			log.Println(err)
 			time.Sleep(constData.ReplyGetRequestTimeOut * time.Second)
 			continue
 		}
 
+		//	var err error
+		//	var tasks []structures.Task
+		//	tasks = append(tasks, structures.Task{
+		//	Old: structures.JsonOld{},
+		//		Url: "https://nickparts.ru/search.html?article=AW06J01150105AG&brand=DOMINANT&withAnalogs=1",
+		//		})
+
 		err = importData.MakerQueue(tasks, path, debugLog)
 		if err != nil {
-			fmt.Println(`Ошибка получения данных. Поток ` + debugLog.NumberTrade)
+			log.Println(`Ошибка получения данных. Поток ` + debugLog.NumberTrade)
 			time.Sleep(constData.ReplyGetRequestTimeOut * time.Second)
 			continue
 		}
 
 		if debugLog.Debug {
-			fmt.Println(`Я обработал задачу и жду повтора цикла`)
+			log.Println(`Я обработал задачу и жду повтора цикла`)
 		}
-		fmt.Println(debugLog.NumberTrade + "_t Завершил отправку")
+		log.Println(debugLog.NumberTrade + "_t Завершил отправку")
 
 		time.Sleep(constData.ReplyGetRequestTimeOut * time.Second)
 

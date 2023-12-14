@@ -22,6 +22,14 @@ type RequestItem struct {
 	Parameters []RequestItemparameter
 }
 
+type Original struct {
+	Num   string
+	Brand string
+	Text  string
+	Pic   string
+	Price string
+}
+
 type OriginalAnalog struct {
 	Num   string `json:"num"`
 	Brand string `json:"brand"`

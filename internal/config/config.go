@@ -2,6 +2,7 @@ package config
 
 import (
 	"flag"
+
 	"github.com/caarlos0/env"
 )
 
@@ -19,8 +20,8 @@ func InitConfig() (*Config, error) {
 	flag.StringVar(&cfg.StartCopy, "t", "1", "t=1")
 	flag.BoolVar(&cfg.Debug, "debug", false, "debug=true")
 	flag.StringVar(&cfg.Path, "path", tPath, "path=C:\\temp\\00")
-	flag.StringVar(&cfg.URLImport, "urlI", urlI, "urlI=https://avtozzzapchasti.ru/rest/get_items/")
-	flag.StringVar(&cfg.URLExport, "urlE", urlE, "urlE=https://avtozzzapchasti.ru/rest/import/")
+	flag.StringVar(&cfg.URLImport, "urlI", urlI, "urlI=https://shop-avtozap.ru/rest/get_items/")
+	flag.StringVar(&cfg.URLExport, "urlE", urlE, "urlE=https://shop-avtozap.ru/rest/import/")
 
 	flag.Parse()
 

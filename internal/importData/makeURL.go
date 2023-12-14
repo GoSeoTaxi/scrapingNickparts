@@ -3,8 +3,10 @@ package importData
 import (
 	"encoding/json"
 	"fmt"
-	"scrapingNickparts/internal/structures"
+	"log"
 	"strings"
+
+	"scrapingNickparts/internal/structures"
 )
 
 func taskMaker(b []byte) (tasks []structures.Task, err error) {
@@ -13,7 +15,7 @@ func taskMaker(b []byte) (tasks []structures.Task, err error) {
 
 	err = json.Unmarshal(b, &jsonVar)
 	if err != nil {
-		fmt.Println(`Ошибка Анмаршал`)
+		log.Println(`Ошибка Анмаршал`)
 
 		return nil, err
 	}

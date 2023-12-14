@@ -2,13 +2,13 @@ package browserWindow
 
 import (
 	"context"
-	"fmt"
-	"github.com/chromedp/chromedp"
 	"log"
+	"time"
+
+	"github.com/chromedp/chromedp"
 	"scrapingNickparts/internal/ChangeData"
 	"scrapingNickparts/internal/constData"
 	"scrapingNickparts/internal/structures"
-	"time"
 )
 
 func GetReq(sURL string, pathChrome string, debugLog structures.DebugLog) (body []byte) {
@@ -21,7 +21,7 @@ func GetReq(sURL string, pathChrome string, debugLog structures.DebugLog) (body 
 
 		if rep > 0 {
 			if debugLog.Debug {
-				fmt.Printf("Ошибка сети. Запуск цил повтора. Попытка номер - %v \nURL - %v \n", rep, sURL)
+				log.Printf("Ошибка сети. Запуск цил повтора. Попытка номер - %v \nURL - %v \n", rep, sURL)
 			}
 		}
 
@@ -53,7 +53,7 @@ func GetReq(sURL string, pathChrome string, debugLog structures.DebugLog) (body 
 
 			time.AfterFunc(120*time.Second, func() {
 				if debugLog.Debug {
-					fmt.Println("Завершаем зависший процесс")
+					log.Println("Завершаем зависший процесс")
 				}
 				cancel2()
 			})
@@ -66,7 +66,7 @@ func GetReq(sURL string, pathChrome string, debugLog structures.DebugLog) (body 
 
 			// run task list
 			err = chromedp.Run(ctx,
-				//clickAccept(),
+				// clickAccept(),
 				wait5S(debugLog),
 			)
 
@@ -87,7 +87,7 @@ func GetReq(sURL string, pathChrome string, debugLog structures.DebugLog) (body 
 				scrapIt(&res),
 			)
 			if err != nil {
-				fmt.Println(err)
+				log.Println(err)
 				err1 = err
 			}
 
@@ -96,7 +96,7 @@ func GetReq(sURL string, pathChrome string, debugLog structures.DebugLog) (body 
 		}()
 
 		if debugLog.Debug {
-			fmt.Println(`Создаём запрос из браузера`)
+			log.Println(`Создаём запрос из браузера`)
 		}
 
 		if err1 != nil {

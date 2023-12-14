@@ -3,19 +3,21 @@ package importData
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"time"
+
 	"scrapingNickparts/internal/constData"
 	"scrapingNickparts/internal/structures"
-	"time"
 )
 
 func GetDataJSON(url string, debugLog structures.DebugLog) (tasks []structures.Task, err error) {
-	fmt.Println(debugLog.NumberTrade + `_t. Делаем запрос к серверу за задачами...`)
+	log.Println(debugLog.NumberTrade + `_t. Делаем запрос к серверу за задачами...`)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println(debugLog.NumberTrade + `_t. Не Создали запрос`)
+		log.Println(err)
+		log.Println(debugLog.NumberTrade + `_t. Не Создали запрос`)
 		time.Sleep(constData.ReplyGetRequestTimeOut * time.Second)
 		return nil, err
 	}
@@ -25,14 +27,14 @@ func GetDataJSON(url string, debugLog structures.DebugLog) (tasks []structures.T
 	client := &http.Client{Timeout: (time.Second * constData.TimeOutRequestGeter)}
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println(debugLog.NumberTrade + `_t. Не считали данные`)
+		log.Println(debugLog.NumberTrade + `_t. Не считали данные`)
 		return nil, err
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println(`Error reading body. `)
-		fmt.Println(err)
+		log.Println(`Error reading body. `)
+		log.Println(err)
 		time.Sleep(constData.ReplyGetRequestTimeOut * time.Second)
 		res.Body.Close()
 		return nil, err
@@ -41,8 +43,8 @@ func GetDataJSON(url string, debugLog structures.DebugLog) (tasks []structures.T
 
 	tasks, err = taskMaker(body)
 	if err != nil {
-		fmt.Println(debugLog.NumberTrade + `_t. Error encoding JSON. `)
-		fmt.Println(err)
+		log.Println(debugLog.NumberTrade + `_t. Error encoding JSON. `)
+		log.Println(err)
 		time.Sleep(constData.ReplyGetRequestTimeOut * time.Second)
 
 	}
@@ -50,6 +52,8 @@ func GetDataJSON(url string, debugLog structures.DebugLog) (tasks []structures.T
 	if len(tasks) < 1 {
 		return nil, fmt.Errorf(`Нет задач`)
 	}
+
+	log.Printf("Поток %v_t - Получил %v задач \n", debugLog.NumberTrade, len(tasks))
 
 	return tasks, nil
 }

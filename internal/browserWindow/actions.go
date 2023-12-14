@@ -2,12 +2,13 @@ package browserWindow
 
 import (
 	"context"
+	"log"
+	"time"
+
 	"github.com/chromedp/cdproto/cdp"
 	"github.com/chromedp/chromedp"
-	"log"
 	"scrapingNickparts/internal/constData"
 	"scrapingNickparts/internal/structures"
-	"time"
 )
 
 func wait5S(debugLog structures.DebugLog) chromedp.Tasks {
@@ -63,9 +64,9 @@ func clickMoreCheck(selectorClick *string, debugLog structures.DebugLog) chromed
 			if len(nodes) > 0 {
 				*selectorClick = constData.ClassMoreClick
 
-				//for _, node := range nodes {
-				//	fmt.Printf("node name: %s, node value: %s", node.NodeName, node.NodeValue)
-				//}
+				// for _, node := range nodes {
+				//	log.Printf("node name: %s, node value: %s", node.NodeName, node.NodeValue)
+				// }
 
 			}
 

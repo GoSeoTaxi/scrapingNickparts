@@ -2,16 +2,17 @@ package importData
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
+
 	"scrapingNickparts/internal/structures"
 )
 
 func sendJson(resMarchal *[]byte, debugLog structures.DebugLog) (err error) {
 
 	if debugLog.Debug {
-		fmt.Println(debugLog.NumberTrade+"_Trade URL:>", debugLog.UrlE)
+		log.Println(debugLog.NumberTrade+"_Trade URL:>", debugLog.UrlE)
 	}
 
 	req, err := http.NewRequest("POST", debugLog.UrlE, bytes.NewBuffer(*resMarchal))
@@ -25,15 +26,17 @@ func sendJson(resMarchal *[]byte, debugLog structures.DebugLog) (err error) {
 	defer resp.Body.Close()
 
 	if debugLog.Debug {
-		fmt.Println(debugLog.NumberTrade+"_trade response Status:", resp.Status)
-		fmt.Println(debugLog.NumberTrade+"_trade response Headers:", resp.Header)
+		log.Println(debugLog.NumberTrade+"_trade response Status:", resp.Status)
+		log.Println(debugLog.NumberTrade+"_trade response Headers:", resp.Header)
 	}
 
 	body, _ := ioutil.ReadAll(resp.Body)
 
 	if debugLog.Debug {
-		fmt.Println(debugLog.NumberTrade+"_trade response Body:", string(body))
+		log.Println(debugLog.NumberTrade+"_trade response Body:", string(body))
 	}
+
+	log.Printf("Поток %v_t отправил задания\n", debugLog.NumberTrade)
 
 	return err
 }
