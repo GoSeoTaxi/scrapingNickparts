@@ -70,13 +70,6 @@ func cirkle(path string, numTrade int, cfg config.Config) {
 			continue
 		}
 
-		//	var err error
-		//	var tasks []structures.Task
-		//	tasks = append(tasks, structures.Task{
-		//	Old: structures.JsonOld{},
-		//		Url: "https://nickparts.ru/search.html?article=AW06J01150105AG&brand=DOMINANT&withAnalogs=1",
-		//		})
-
 		err = importData.MakerQueue(tasks, path, debugLog)
 		if err != nil {
 			log.Println(`Ошибка получения данных. Поток ` + debugLog.NumberTrade)
